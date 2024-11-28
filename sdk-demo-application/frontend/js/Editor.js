@@ -7,6 +7,9 @@ function capitalize(s) {
 function createForm(config, data_item) {
   let form = document.createElement('form')
 
+  console.log('DATA ITEM', data_item)
+  console.log('CONFIG', config)
+
   let {
     fields = {},
     op = 'create',
@@ -70,6 +73,8 @@ function createForm(config, data_item) {
     }
 
     if(!(key in editables)) {
+      console.log('KEY', key, value)
+      console.log('EDITABLES', editables)
       input.disabled = true
       input.style.backgroundColor = '#ccc'
     }
@@ -78,6 +83,7 @@ function createForm(config, data_item) {
     input.defaultValue = value != null && value || ''
 
     // TODO: refine to be editable but this is disabled for now
+    console.log('VALUE', input.defaultValue, value)
     if(typeof value == 'object' && value != null) {
       input.disabled = true
       input.defaultValue = JSON.stringify(value)

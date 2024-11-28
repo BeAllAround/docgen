@@ -5,7 +5,7 @@ import createTable from "./DataTable.js"
 
 import { createForm } from './Editor.js'
 
-const SDK_NAME = 'TrelloSDK'
+const SDK_NAME = 'SailhouseSDK'
 
 // TODO: Figure the best way to export this globally
 window.createForm = createForm
@@ -13,435 +13,489 @@ window.createForm = createForm
 window[SDK_NAME].fields = {}
 
 // TODO: Separate editables for both create and save but usually the fields added in POST are the same for PUT for most Swaggers.
+// window[SDK_NAME].fields.editables = {
+//   'board': {
+//     "post": {
+//       "closed": { // required but NOT indicated by the SWAGGER
+//         "type": "string",
+//         "values": ["true", "false"]
+//       },
+//       "desc": {
+//         "type": "string",
+//         "length": {
+//           "min": 0,
+//           "max": 16384
+//         }
+//       },
+//       "idBoardSource": {
+//         "type": "string",
+//         "description": "The id of the board to copy into the new board"
+//       },
+//       "idOrganization": {
+//         "type": "string",
+//         "description": "The id or name of the organization to add the board to"
+//       },
+//       "keepFromSource": {
+//         "type": "string",
+//         "description": "Components of the source board to copy"
+//       },
+//       "labelNames": {
+//         "blue": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "green": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "orange": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "purple": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "red": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "yellow": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         }
+//       },
+//       "name": {
+//         "type": "string",
+//         "length": {
+//           "min": 1,
+//           "max": 16384
+//         }
+//       },
+//       "powerUps": {
+//         "type": "string",
+//         "values": ["all", "calendar", "cardAging", "recap", "voting"]
+//       },
+//       "prefs": {
+//         "background": {
+//           "type": "string",
+//           "description": "A standard background name, or the id of a custom background"
+//         },
+//         "calendarFeedEnabled": {
+//           "type": "string",
+//           "values": ["true", "false"]
+//         },
+//         "cardAging": {
+//           "type": "string",
+//           "values": ["pirate", "regular"]
+//         },
+//         "cardCovers": {
+//           "type": "string",
+//           "values": ["true", "false"]
+//         },
+//         "comments": {
+//           "type": "string",
+//           "values": ["disabled", "members", "observers", "org", "public"]
+//         },
+//         "invitations": {
+//           "type": "string",
+//           "values": ["admins", "members"]
+//         },
+//         "permissionLevel": {
+//           "type": "string",
+//           "values": ["org", "private", "public"]
+//         },
+//         "selfJoin": {
+//           "type": "string",
+//           "values": ["true", "false"]
+//         },
+//         "voting": {
+//           "type": "string",
+//           "values": ["disabled", "members", "observers", "org", "public"]
+//         }
+//       },
+//       "prefs_background": {
+//         "type": "string",
+//         "length": {
+//           "min": 0,
+//           "max": 16384
+//         }
+//       },
+//       "prefs_cardAging": {
+//         "type": "string",
+//         "values": ["pirate", "regular"]
+//       },
+//       "prefs_cardCovers": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       },
+//       "prefs_comments": {
+//         "type": "string",
+//         "values": ["disabled", "members", "observers", "org", "public"]
+//       },
+//       "prefs_invitations": {
+//         "type": "string",
+//         "values": ["admins", "members"]
+//       },
+//       "prefs_permissionLevel": {
+//         "type": "string",
+//         "values": ["org", "private", "public"]
+//       },
+//       "prefs_selfJoin": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       },
+//       "prefs_voting": {
+//         "type": "string",
+//         "values": ["disabled", "members", "observers", "org", "public"]
+//       },
+//       "subscribed": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       }
+//     },
+//     "put": {
+//       "closed": { // required but NOT indicated by the SWAGGER
+//         "type": "string",
+//         "values": ["true", "false"]
+//       },
+//       "desc": {
+//         "type": "string",
+//         "length": {
+//           "min": 0,
+//           "max": 16384
+//         }
+//       },
+//       "idBoardSource": {
+//         "type": "string",
+//         "description": "The id of the board to copy into the new board"
+//       },
+//       "idOrganization": {
+//         "type": "string",
+//         "description": "The id or name of the organization to add the board to"
+//       },
+//       "keepFromSource": {
+//         "type": "string",
+//         "description": "Components of the source board to copy"
+//       },
+//       "labelNames": {
+//         "blue": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "green": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "orange": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "purple": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "red": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         },
+//         "yellow": {
+//           "type": "string",
+//           "length": {
+//             "min": 0,
+//             "max": 16384
+//           }
+//         }
+//       },
+//       "name": {
+//         "type": "string",
+//         "length": {
+//           "min": 1,
+//           "max": 16384
+//         }
+//       },
+//       "powerUps": {
+//         "type": "string",
+//         "values": ["all", "calendar", "cardAging", "recap", "voting"]
+//       },
+//       "prefs": {
+//         "background": {
+//           "type": "string",
+//           "description": "A standard background name, or the id of a custom background"
+//         },
+//         "calendarFeedEnabled": {
+//           "type": "string",
+//           "values": ["true", "false"]
+//         },
+//         "cardAging": {
+//           "type": "string",
+//           "values": ["pirate", "regular"]
+//         },
+//         "cardCovers": {
+//           "type": "string",
+//           "values": ["true", "false"]
+//         },
+//         "comments": {
+//           "type": "string",
+//           "values": ["disabled", "members", "observers", "org", "public"]
+//         },
+//         "invitations": {
+//           "type": "string",
+//           "values": ["admins", "members"]
+//         },
+//         "permissionLevel": {
+//           "type": "string",
+//           "values": ["org", "private", "public"]
+//         },
+//         "selfJoin": {
+//           "type": "string",
+//           "values": ["true", "false"]
+//         },
+//         "voting": {
+//           "type": "string",
+//           "values": ["disabled", "members", "observers", "org", "public"]
+//         }
+//       },
+//       "prefs_background": {
+//         "type": "string",
+//         "length": {
+//           "min": 0,
+//           "max": 16384
+//         }
+//       },
+//       "prefs_cardAging": {
+//         "type": "string",
+//         "values": ["pirate", "regular"]
+//       },
+//       "prefs_cardCovers": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       },
+//       "prefs_comments": {
+//         "type": "string",
+//         "values": ["disabled", "members", "observers", "org", "public"]
+//       },
+//       "prefs_invitations": {
+//         "type": "string",
+//         "values": ["admins", "members"]
+//       },
+//       "prefs_permissionLevel": {
+//         "type": "string",
+//         "values": ["org", "private", "public"]
+//       },
+//       "prefs_selfJoin": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       },
+//       "prefs_voting": {
+//         "type": "string",
+//         "values": ["disabled", "members", "observers", "org", "public"]
+//       },
+//       "subscribed": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       }
+//     },
+//   },
+
+//   "list": {
+//     "post": {
+//       "closed": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       },
+//       "idBoard": {
+//         "type": "string",
+//         "description": "id of the board that the list should be added to"
+//       },
+//       "idListSource": {
+//         "type": "string",
+//         "description": "The id of the list to copy into a new list"
+//       },
+//       "name": {
+//         "type": "string",
+//         "length": {
+//           "min": 1,
+//           "max": 16384
+//         }
+//       },
+//       "pos": {
+//         "type": "string",
+//         "values": ["top", "bottom"],
+//         "description": "A position. 'top', 'bottom', or a positive number"
+//       },
+//       "subscribed": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       }
+//     },
+//     "put": {
+//       "closed": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       },
+//       "idBoard": {
+//         "type": "string",
+//         "description": "id of the board that the list should be added to"
+//       },
+//       "idListSource": {
+//         "type": "string",
+//         "description": "The id of the list to copy into a new list"
+//       },
+//       "name": {
+//         "type": "string",
+//         "length": {
+//           "min": 1,
+//           "max": 16384
+//         }
+//       },
+//       "pos": {
+//         "type": "string",
+//         "values": ["top", "bottom"],
+//         "description": "A position. 'top', 'bottom', or a positive number"
+//       },
+//       "subscribed": {
+//         "type": "string",
+//         "values": ["true", "false"]
+//       }
+//     }
+//   }
+
+// }
+
 window[SDK_NAME].fields.editables = {
-  'board': {
-    "post": {
-      "closed": { // required but NOT indicated by the SWAGGER
-        "type": "string",
-        "values": ["true", "false"]
+  topic: {
+    post: {
+      data: {
+        type: "object",
+        description: "Event data payload",
       },
-      "desc": {
-        "type": "string",
-        "length": {
-          "min": 0,
-          "max": 16384
-        }
+      metadata: {
+        type: "object",
+        description: "Metadata of the event",
       },
-      "idBoardSource": {
-        "type": "string",
-        "description": "The id of the board to copy into the new board"
-      },
-      "idOrganization": {
-        "type": "string",
-        "description": "The id or name of the organization to add the board to"
-      },
-      "keepFromSource": {
-        "type": "string",
-        "description": "Components of the source board to copy"
-      },
-      "labelNames": {
-        "blue": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "green": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "orange": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "purple": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "red": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "yellow": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        }
-      },
-      "name": {
-        "type": "string",
-        "length": {
-          "min": 1,
-          "max": 16384
-        }
-      },
-      "powerUps": {
-        "type": "string",
-        "values": ["all", "calendar", "cardAging", "recap", "voting"]
-      },
-      "prefs": {
-        "background": {
-          "type": "string",
-          "description": "A standard background name, or the id of a custom background"
-        },
-        "calendarFeedEnabled": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "cardAging": {
-          "type": "string",
-          "values": ["pirate", "regular"]
-        },
-        "cardCovers": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "comments": {
-          "type": "string",
-          "values": ["disabled", "members", "observers", "org", "public"]
-        },
-        "invitations": {
-          "type": "string",
-          "values": ["admins", "members"]
-        },
-        "permissionLevel": {
-          "type": "string",
-          "values": ["org", "private", "public"]
-        },
-        "selfJoin": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "voting": {
-          "type": "string",
-          "values": ["disabled", "members", "observers", "org", "public"]
-        }
-      },
-      "prefs_background": {
-        "type": "string",
-        "length": {
-          "min": 0,
-          "max": 16384
-        }
-      },
-      "prefs_cardAging": {
-        "type": "string",
-        "values": ["pirate", "regular"]
-      },
-      "prefs_cardCovers": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "prefs_comments": {
-        "type": "string",
-        "values": ["disabled", "members", "observers", "org", "public"]
-      },
-      "prefs_invitations": {
-        "type": "string",
-        "values": ["admins", "members"]
-      },
-      "prefs_permissionLevel": {
-        "type": "string",
-        "values": ["org", "private", "public"]
-      },
-      "prefs_selfJoin": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "prefs_voting": {
-        "type": "string",
-        "values": ["disabled", "members", "observers", "org", "public"]
-      },
-      "subscribed": {
-        "type": "string",
-        "values": ["true", "false"]
-      }
-    },
-    "put": {
-      "closed": { // required but NOT indicated by the SWAGGER
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "desc": {
-        "type": "string",
-        "length": {
-          "min": 0,
-          "max": 16384
-        }
-      },
-      "idBoardSource": {
-        "type": "string",
-        "description": "The id of the board to copy into the new board"
-      },
-      "idOrganization": {
-        "type": "string",
-        "description": "The id or name of the organization to add the board to"
-      },
-      "keepFromSource": {
-        "type": "string",
-        "description": "Components of the source board to copy"
-      },
-      "labelNames": {
-        "blue": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "green": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "orange": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "purple": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "red": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "yellow": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        }
-      },
-      "name": {
-        "type": "string",
-        "length": {
-          "min": 1,
-          "max": 16384
-        }
-      },
-      "powerUps": {
-        "type": "string",
-        "values": ["all", "calendar", "cardAging", "recap", "voting"]
-      },
-      "prefs": {
-        "background": {
-          "type": "string",
-          "description": "A standard background name, or the id of a custom background"
-        },
-        "calendarFeedEnabled": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "cardAging": {
-          "type": "string",
-          "values": ["pirate", "regular"]
-        },
-        "cardCovers": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "comments": {
-          "type": "string",
-          "values": ["disabled", "members", "observers", "org", "public"]
-        },
-        "invitations": {
-          "type": "string",
-          "values": ["admins", "members"]
-        },
-        "permissionLevel": {
-          "type": "string",
-          "values": ["org", "private", "public"]
-        },
-        "selfJoin": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "voting": {
-          "type": "string",
-          "values": ["disabled", "members", "observers", "org", "public"]
-        }
-      },
-      "prefs_background": {
-        "type": "string",
-        "length": {
-          "min": 0,
-          "max": 16384
-        }
-      },
-      "prefs_cardAging": {
-        "type": "string",
-        "values": ["pirate", "regular"]
-      },
-      "prefs_cardCovers": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "prefs_comments": {
-        "type": "string",
-        "values": ["disabled", "members", "observers", "org", "public"]
-      },
-      "prefs_invitations": {
-        "type": "string",
-        "values": ["admins", "members"]
-      },
-      "prefs_permissionLevel": {
-        "type": "string",
-        "values": ["org", "private", "public"]
-      },
-      "prefs_selfJoin": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "prefs_voting": {
-        "type": "string",
-        "values": ["disabled", "members", "observers", "org", "public"]
-      },
-      "subscribed": {
-        "type": "string",
-        "values": ["true", "false"]
-      }
     },
   },
+};
 
-  "list": {
-    "post": {
-      "closed": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "idBoard": {
-        "type": "string",
-        "description": "id of the board that the list should be added to"
-      },
-      "idListSource": {
-        "type": "string",
-        "description": "The id of the list to copy into a new list"
-      },
-      "name": {
-        "type": "string",
-        "length": {
-          "min": 1,
-          "max": 16384
-        }
-      },
-      "pos": {
-        "type": "string",
-        "values": ["top", "bottom"],
-        "description": "A position. 'top', 'bottom', or a positive number"
-      },
-      "subscribed": {
-        "type": "string",
-        "values": ["true", "false"]
-      }
-    },
-    "put": {
-      "closed": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "idBoard": {
-        "type": "string",
-        "description": "id of the board that the list should be added to"
-      },
-      "idListSource": {
-        "type": "string",
-        "description": "The id of the list to copy into a new list"
-      },
-      "name": {
-        "type": "string",
-        "length": {
-          "min": 1,
-          "max": 16384
-        }
-      },
-      "pos": {
-        "type": "string",
-        "values": ["top", "bottom"],
-        "description": "A position. 'top', 'bottom', or a positive number"
-      },
-      "subscribed": {
-        "type": "string",
-        "values": ["true", "false"]
-      }
-    }
-  }
-
-}
 
 let entities = [
   {
-    name: 'board',
-    title: 'Board', // just capitalized
+    name: 'subscription',
+    title: 'Subscription', // just capitalized
 
     // TODO: Transform from model
     op: {
       save: {},
-      create: {},
+      create: {
+        query: {
+          topic: {
+            type: String,
+            default: 'example-topic1'
+          },
+          data: {
+            type: Object,
+            default: { key: 'value' }, // Adjust to the required payload structure
+          },
+          metadata: {
+            type: Object,
+            default: { otherField: 'test-value' },
+          },
+        },
+      },
       list: {
         query: {
-          idMember: { 
+          topic: { 
             type: String,
             // HARDCODED - make a query button/form
-            default: 'me'
+            default: 'example-topic1'
+          },
+          subscription: {
+            type: String,
+            default: 'test'
           }
-        }
+        },
       },
       remove: {}
     },
 
     // TODO: Transform from model
-    formFields: Object.keys(window[SDK_NAME].fields.editables['board'].post)
+    formFields: Object.keys(window[SDK_NAME].fields.editables['topic'].post)
   },
   {
-    name: 'list',
-    title: 'List',
+    name: 'topic',
+    title: 'Topics',
 
     // TODO: Transform from model
     op: {
       save: {},
-      create: {},
+      create: {
+        query: {
+          topic: {
+            type: String,
+            default: 'example-topic1'
+          },
+          data: {
+            type: Object,
+            default: { key: 'value' }, // Adjust to the required payload structure
+          },
+          metadata: {
+            type: Object,
+            default: { otherField: 'test-value' },
+          },
+        },
+      },
       list: {
         query: {
-          idBoard: { 
+          topic: { 
             type: String,
             // HARDCODED - make a query button/form
-            default: '6735f4225f8fbbd10bba2da0'
+            default: 'example-topic1'
+          },
+          subscription: {
+            type: String,
+            default: 'test'
           }
-        }
+        },
       },
       // If not found here, it is considered "UNSUPPORTED"
       // remove: {}
     },
 
-    formFields: Object.keys(window[SDK_NAME].fields.editables['list'].post)
+    formFields: Object.keys(window[SDK_NAME].fields.editables['topic'].post)
   }
 ]
 
@@ -460,12 +514,12 @@ function injectDataEditor(data, op, handler) {
 
   dataEditorDivContainer.innerHTML = ''
 
+  console.log('Editables Fields Create Form: ', window[SDK_NAME].ui.current_entity.name)
   let form = createForm({
     fields: {
       'id': { disabled: true },
       'lastModified': { disabled: true },
-      editables: window[SDK_NAME].fields.editables[
-        window[SDK_NAME].ui.current_entity.name].put
+      editables: window[SDK_NAME].fields.editables['topic'].post
     },
     op, // TODO: ops: ['Save', 'Delete']
     handler: handler || ((op, json_data) => console.log('result: ', op, json_data)),
@@ -583,9 +637,11 @@ async function loadComponents(current_entity) {
               }, {})
 
               console.log('new entity: ', new_entity)
+              console.log('current_entity: ', window[SDK_NAME].ui.current_entity)
 
               // TODO: Exclude delete button/op, Only create button
               injectDataEditor(new_entity, 'create', async (op, item) => {
+                console.log('ddd: ', op, item) // { ...item }
 
                 if(op == 'create') {
                   let post_item = await fetch(`/api/${SDK_NAME}/${window[SDK_NAME].ui.current_entity.name}/create`, {
