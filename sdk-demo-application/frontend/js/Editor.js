@@ -7,9 +7,6 @@ function capitalize(s) {
 function createForm(config, data_item) {
   let form = document.createElement('form')
 
-  console.log('DATA ITEM', data_item)
-  console.log('CONFIG', config)
-
   let {
     fields = {},
     op = 'create',
@@ -42,63 +39,67 @@ function createForm(config, data_item) {
     ...Object.keys(editables)])
 
   for(let key of visible_fields) {
-    /*
-    if(key == 'id') {
-      continue
-    }
-     */
+    const value = data_item[key];
+    const fieldOptions = editables[key] || {};
+    const fieldType = fieldOptions.type || typeof value;
+  
+    if (fieldType === "object" && op === "create") {
+      createObjectFieldset(key, value, form, op);
+    } else {
+      /*
+      if(key == 'id') {
+        continue
+      }
+      */
 
-    let div = document.createElement('div')
-    let value = data_item[key]
+      let div = document.createElement('div')
+      let value = data_item[key]
 
-    // TODO: Dynamically build the style
-    div.classList.add('form-group')
+      // TODO: Dynamically build the style
+      div.classList.add('form-group')
 
-    let label = document.createElement('label')
-    let input = document.createElement('input')
+      let label = document.createElement('label')
+      let input = document.createElement('input')
 
-    // TODO: password, email, tel, etc.
-    input.type = 'text'
+      // TODO: password, email, tel, etc.
+      input.type = 'text'
 
-    // NOTE: NEEDED for FormData
-    input.name = key
-    input.id = key
+      // NOTE: NEEDED for FormData
+      input.name = key
+      input.id = key
 
-    let field_options = fields[key]
-    if(field_options) {
-      if(field_options.disabled) {
+      let field_options = fields[key]
+      if(field_options) {
+        if(field_options.disabled) {
+          input.disabled = true
+          input.style.backgroundColor = '#ccc'
+        }
+      }
+
+      if(!(key in editables)) {
         input.disabled = true
         input.style.backgroundColor = '#ccc'
       }
+
+      label.textContent = key
+      input.defaultValue = value != null && value || ''
+
+      // TODO: refine to be editable but this is disabled for now
+      if(typeof value == 'object' && value != null) {
+        input.disabled = true
+        input.defaultValue = JSON.stringify(value)
+        input.style.backgroundColor = '#ccc'
+      } else if(value == null) {
+        input.disabled = true
+        input.defaultValue = 'null'
+        input.style.backgroundColor = '#ccc'
+      }
+
+      div.appendChild(label)
+      div.appendChild(input)
+
+      form.appendChild(div)
     }
-
-    if(!(key in editables)) {
-      console.log('KEY', key, value)
-      console.log('EDITABLES', editables)
-      input.disabled = true
-      input.style.backgroundColor = '#ccc'
-    }
-
-    label.textContent = key
-    input.defaultValue = value != null && value || ''
-
-    // TODO: refine to be editable but this is disabled for now
-    console.log('VALUE', input.defaultValue, value)
-    if(typeof value == 'object' && value != null) {
-      input.disabled = true
-      input.defaultValue = JSON.stringify(value)
-      input.style.backgroundColor = '#ccc'
-    } else if(value == null) {
-      input.disabled = true
-      input.defaultValue = 'null'
-      input.style.backgroundColor = '#ccc'
-    }
-
-    div.appendChild(label)
-    div.appendChild(input)
-
-    form.appendChild(div)
-
   }
 
   let div_button = $create({
@@ -115,10 +116,10 @@ function createForm(config, data_item) {
       $create({
         elem: 'button',
         textContent: capitalize(op),
-        style: {
+        style: op != 'create' ? {
           filter: save_enabled ? 'none': 'brightness(1.5)',
           pointerEvents: save_enabled ? 'all' : 'none'
-        },
+        } : {},
         props: {
           type: 'submit',
           dataset: {
@@ -150,6 +151,77 @@ function createForm(config, data_item) {
   attachSubmitHandler(form, handler)
 
   return form
+}
+
+function createObjectFieldset(key, value, form, op) {
+  {
+    // Handle object type dynamically
+    let fieldset = document.createElement("fieldset");
+    let legend = document.createElement("legend");
+    legend.textContent = `${key} (Object)`;
+    fieldset.appendChild(legend);
+
+    let objectContainer = document.createElement("div");
+    objectContainer.classList.add("object-container");
+    fieldset.appendChild(objectContainer);
+
+    const renderObjectProperties = (obj, container, parentKey) => {
+      container.innerHTML = ""; // Clear the container to re-render properties
+      for (let propKey in obj) {
+        let div = document.createElement("div");
+        div.classList.add("form-group");
+
+        let label = document.createElement("label");
+        label.textContent = `${parentKey}.${propKey}`;
+
+        let input = document.createElement("input");
+        input.type = "text";
+        input.name = `${parentKey}[${propKey}]`;
+        input.id = `${parentKey}.${propKey}`;
+        input.value = obj[propKey];
+
+        let deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.textContent = "Delete";
+        deleteButton.onclick = () => {
+          delete obj[propKey];
+          renderObjectProperties(obj, container, parentKey);
+        };
+
+        div.appendChild(label);
+        div.appendChild(input);
+        div.appendChild(deleteButton);
+        container.appendChild(div);
+      }
+
+      // Add a button to add new properties
+      let addPropertyDiv = document.createElement("div");
+      addPropertyDiv.classList.add("form-group");
+
+      let newPropInput = document.createElement("input");
+      newPropInput.type = "text";
+      newPropInput.placeholder = "New Property Name";
+
+      let addButton = document.createElement("button");
+      addButton.type = "button";
+      addButton.textContent = "Add Property";
+      addButton.onclick = () => {
+        const newPropKey = newPropInput.value.trim();
+        if (newPropKey && !(newPropKey in obj)) {
+          obj[newPropKey] = ""; // Default to an empty string
+          renderObjectProperties(obj, container, parentKey);
+        }
+      };
+
+      addPropertyDiv.appendChild(newPropInput);
+      addPropertyDiv.appendChild(addButton);
+      container.appendChild(addPropertyDiv);
+    };
+
+    // Initialize the object properties UI
+    renderObjectProperties(value || {}, objectContainer, key);
+    form.appendChild(fieldset);
+  }
 }
 
 function attachSubmitHandler(form, userHandler) {
