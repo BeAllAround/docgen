@@ -1,106 +1,75 @@
+function createTable(header, data, rowClick = function () {}) {
+  let div = document.createElement('div');
+  let table = document.createElement('table');
+  table.classList.add('modern-table');
 
-function createTable(header, data, rowClick = function() {}) {
-  let div = document.createElement('div')
-  let table = document.createElement('table')
+  let thead = document.createElement('thead');
+  let tbody = document.createElement('tbody');
 
-  table.id = "basicLedTable"
+  let thr = document.createElement('tr');
 
-
-  let thead = document.createElement('thead')
-  let tbody = document.createElement('tbody')
-
-  let thr = document.createElement('tr')
-
-
-  for(const column of header) {
-    /*
-    if(column.title == 'id') {
-      continue
-    }
-    */
-
-    const th = document.createElement('th')
-    th.classList.add('tableheader')
-    th.textContent = column.title || 'Blank'
-
-    thr.appendChild(th)
-
+  // Add header columns
+  for (const column of header) {
+    const th = document.createElement('th');
+    th.textContent = column.title || 'Blank';
+    th.classList.add('modern-table-header');
+    thr.appendChild(th);
   }
-  thead.appendChild(thr)
+  thead.appendChild(thr);
 
   let selected_rows = {
-    prev: null
-  }
+    prev: null,
+  };
 
-  data.forEach(entry => {
-    let tbr = document.createElement('tr')
-    let i = 0 // TODO: Refactor once we define the interface for header
+  // Add table rows
+  data.forEach((entry) => {
+    let tbr = document.createElement('tr');
+    tbr.classList.add('modern-table-row');
 
-    if(entry.id != null) {
-      tbr.dataset.id = entry.id
+    if (entry.id != null) {
+      tbr.dataset.id = entry.id;
     }
 
-    for(let column of header) {
-      /*
-      if(column.key == 'id') {
-        continue
+    for (let column of header) {
+      let key = column.key;
+      const td = document.createElement('td');
+      td.classList.add('modern-table-cell');
+
+      if (typeof entry[key] === 'object' && entry[key] != null) {
+        tbr.dataset[key] = JSON.stringify(entry[key]);
+      } else {
+        tbr.dataset[key] = entry[key];
       }
-      */
-      let key = column.key
-      const td = document.createElement('td')
-      td.classList.add('tablecolumn')
 
-      // tbr.id = entry.id || i++;
-
-      // TODO: Try to come up with a more efficient way since entry[key] is basically stored in the td.textContent
-      // See: https://developer.mozilla.org/en-US/docs/Web/API/DOMStringMap
-      tbr.dataset[key] = entry[key]
-
-      td.textContent = entry[key]
-
-      tbr.appendChild(td)
+      td.textContent = entry[key] || '-';
+      tbr.appendChild(td);
     }
 
+    // Add row click handling
     tbr.addEventListener('click', async function (event) {
-      // Even use the Lexical Environment(tbr) or event.target.parentNode
-      // console.log(this.dataset)
-      if(selected_rows.prev) {
-        selected_rows.prev.style.border = '0'
-        selected_rows.prev.style.backgroundColor = ''
+      if (selected_rows.prev) {
+        selected_rows.prev.classList.remove('modern-table-row-selected');
       }
 
-      selected_rows.prev = this // HTMLElement
+      selected_rows.prev = this;
+      this.classList.add('modern-table-row-selected');
 
-      this.style.border = '3px solid #9abde1'
-      this.style.backgroundColor = '#9abde1'
+      await rowClick.bind(this)(event, this.dataset);
+    });
 
-      await rowClick.bind(this)(event, this.dataset)
-    })
-    tbody.appendChild(tbr)
-  })
+    tbody.appendChild(tbr);
+  });
 
-  table.appendChild(thead)
-  table.appendChild(tbody)
+  table.appendChild(thead);
+  table.appendChild(tbody);
 
-  // Removed when div: style: { display: 'grid' }
-  div.style.maxHeight = '60%'
-  div.style.maxWidth = '100%'
-  div.style.overflow = 'auto'
+  // Container styles for scrolling
+  div.style.maxHeight = '60%';
+  div.style.maxWidth = '1200px';
+  div.style.overflow = 'auto';
+  div.appendChild(table);
 
-  /*
-      background: #fff;
-    border-radius: 5px;
-  */
-
-  // See: https://medium.com/evodeck/responsive-data-tables-with-css-grid-3c58ecf04723
-  div.style.display = 'grid';
-  div.style.gridTemplateColumns = 'repeat(auto-fit, 20em)'
-  div.style.overflowX = 'scroll'
-
-  div.appendChild(table)
-
-  return div
-
+  return div;
 }
 
 export default createTable;
