@@ -2,6 +2,7 @@ import * as JostracaModule from 'jostraca';
 import { Pino } from '@voxgig/util';
 import { Index } from './static/Index';
 import { Main } from './static/Main';
+import { SampleApp } from './sample_app/SampleApp';
 type DocGenOptions = {
     folder: string;
     fs: any;
@@ -43,4 +44,4 @@ export declare const Content: Component;
 export declare const Copy: Component;
 export declare const Fragment: Component;
 export declare const Inject: Component;
-export { Index, Main, Jostraca, DocGen, };
+export { Index, Main, SampleApp, Jostraca, DocGen, };

@@ -16,15 +16,25 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Jostraca = exports.Main = exports.Index = exports.Inject = exports.Fragment = exports.Copy = exports.Content = exports.File = exports.Folder = exports.Project = exports.getx = exports.get = exports.vmap = exports.cmap = exports.select = exports.kebabify = exports.camelify = exports.snakify = exports.each = exports.names = exports.cmp = void 0;
+exports.Jostraca = exports.SampleApp = exports.Main = exports.Index = exports.Inject = exports.Fragment = exports.Copy = exports.Content = exports.File = exports.Folder = exports.Project = exports.getx = exports.get = exports.vmap = exports.cmap = exports.select = exports.kebabify = exports.camelify = exports.snakify = exports.each = exports.names = exports.cmp = void 0;
 exports.DocGen = DocGen;
 const Fs = __importStar(require("node:fs"));
 const JostracaModule = __importStar(require("jostraca"));
@@ -33,7 +43,11 @@ const Index_1 = require("./static/Index");
 Object.defineProperty(exports, "Index", { enumerable: true, get: function () { return Index_1.Index; } });
 const Main_1 = require("./static/Main");
 Object.defineProperty(exports, "Main", { enumerable: true, get: function () { return Main_1.Main; } });
+// Sample App
+const SampleApp_1 = require("./sample_app/SampleApp");
+Object.defineProperty(exports, "SampleApp", { enumerable: true, get: function () { return SampleApp_1.SampleApp; } });
 const prepare_openapi_1 = require("./prepare-openapi");
+const apidef_1 = require("@voxgig/apidef");
 const { Jostraca } = JostracaModule;
 exports.Jostraca = Jostraca;
 function DocGen(opts) {
@@ -82,6 +96,11 @@ DocGen.makeBuild = async function (opts) {
                 pino: build.log,
             });
         }
+        // TEMPORARY FIX:  TODO: apidef should be it's own action, same as sdkgen and docgen
+        const apidef = (0, apidef_1.ApiDef)({
+            pino: build.log,
+        });
+        await apidef.generate(config);
         await docgen.generate({ model, build, config });
     };
 };

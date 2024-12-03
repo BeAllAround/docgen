@@ -5,7 +5,7 @@
     <script>
     
       // Define everything under the SDK namespace
-      const SDK_NAME = 'TrelloSDK'
+      const SDK_NAME = 'SailhouseSDK'
       
       window[SDK_NAME] = {
       	      fields: {},
@@ -15,9 +15,8 @@
                               opened: false,
                       },
                       datatable: {
-                              'load': 'network', // 'load': 'data' loads dynamically from the table, bypassing the GET entity
+                              'load': 'data', // 'load': 'data' loads dynamically from the table, bypassing the GET entity
                       }
-
               }
             }
 
@@ -26,7 +25,7 @@
   </head>
   <body>
     <div class="tab-header">
-      <img src="https://avatars.githubusercontent.com/u/33902825?s=200&v=4" alt="Logo">
+      <img id="dynamic-logo" src="" alt="Logo">
       <nav class="tab-nav">
         <a href="#">About</a>
         <a href="#">Services</a>
@@ -43,6 +42,13 @@
         </div>
       </div>
     </div>
+    <script>
+      const sdkLogos = {
+        SailhouseSDK: "https://mintlify.s3-us-west-1.amazonaws.com/sailhouse/logo/dark.svg",
+        TrelloSDK: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Trello-logo-blue.svg",
+      };
 
+      document.getElementById("dynamic-logo").src = sdkLogos[SDK_NAME];
+    </script>
   </body>
 </html>

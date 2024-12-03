@@ -2,12 +2,44 @@
  * TODO: Inject SDK Client style
  */
 
+  /* Generic Styles */
+  html {
+	box-sizing: border-box;
+  }
+
+  *,
+  *::before,
+  *::after {
+	box-sizing: inherit;
+  }
+
+  footer {
+	text-align: center;
+	position: relative;
+	z-index: 1;
+  }
+
+
 body {
 	display: grid;
+	background-color: var(--c2);
+	color: var(--c1);
+	font-family: sans-serif;
 	/*
 	height: 100%;
 	width: 100%;
 	 */
+}
+
+tbody {
+	background-color: var(--c1);
+}
+
+logo {
+	width: 300px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 *::-webkit-scrollbar {
@@ -26,7 +58,7 @@ body {
 }
 
 *::-webkit-scrollbar-thumb:hover {
-	background-color: #6c7ae0;
+	background-color: var(--c3);
 }
 
 .container {
@@ -50,20 +82,74 @@ body {
 	position: relative;
 }
 
-.centered {
-	text-align: center;
-}
-
-#basicLedTable {
+/* Container */
+.modern-table-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(20em, 1fr));
+	overflow-x: auto;
+	/* background-color: #f9f9f9; */
+	border-radius: 8px;
+	padding: 1em;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Table */
+  .modern-table {
 	width: 100%;
 	border-collapse: collapse;
-	/* margin: 20px; */
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+	/* background-color: white; */
+	border-radius: 8px;
+	overflow: hidden;
+	font-family: Arial, sans-serif;
+  }
+  
+  /* Header */
+  .modern-table-header {
+	background-color: var(--c5);
+	color: var(--c1);
+	text-align: left;
+	padding: 1em;
+	font-size: 1rem;
+	font-weight: bold;
+  }
+  
+  /* Body Rows */
+  .modern-table-row {
+	transition: background-color 0.3s ease;
+  }
+  
+  .modern-table-row:hover {
+	background-color: var(--c4);
+	cursor: pointer;
+  }
+  
+  /* Selected Row */
+  .modern-table-row-selected {
+	background-color: var(--c4);
+	border-left: 4px solid var(--c1);
+  }
+  
+  /* Cells */
+  .modern-table-cell {
+    padding: 1em;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 0.875rem;
+    color: black;
+  }
+  
+  /* Scrollable container for responsiveness */
+  @media (max-width: 768px) {
+	.modern-table-container {
+	  grid-template-columns: 1fr;
+	}
+  
+	.modern-table {
+	  font-size: 0.75rem;
+	}
+  }
+  
 
-.tableheader, .tablecolumn {
-	padding: 12px;
-	border: 1px solid #ddd;
+.centered {
 	text-align: center;
 }
 
@@ -72,18 +158,13 @@ th {
 	color: white;
 }
 
-tr:nth-child(even) {
-	background-color: #f9f9f9;
-}
-
 tr:hover {
-	background-color: #f1f1f1;
+	background-color: var(--c4);
 }
 
 table {
     /* table-layout: fixed; */
     width: 100%;
-    border:1px solid;
     margin-top:20px;
     border-collapse: collapse;
 }
@@ -131,7 +212,7 @@ td {
 .tab-header {
 	display: flex;
 	align-items: center;
-	background-color: #333;
+	background-color: var(--c2);
 	color: white;
 	padding: 10px 20px;
 	border-radius: 8px 8px 0 0;
@@ -142,7 +223,7 @@ td {
 
 .tab-header img {
 	height: 8vh;
-	width: 8vh;
+	width: 16vh;
 	margin-right: 15px;
 }
 
@@ -154,6 +235,7 @@ td {
 
 .tab-nav {
 	display: flex;
+	background-color: var(--c2);
 	gap: 15px;
 }
 
@@ -179,11 +261,12 @@ td {
 
 
 #formEditor {
-	background-color: #ffffff;
+	background-color: var(--c1);
 	padding: 25px 20px;
 	width: 100%;
 	/* max-width: 500px; */
 	border-radius: 10px;
+	color: black;
 }
 
 /*
@@ -202,10 +285,15 @@ gap: 1em;
 	margin-bottom: 5px;
 }
 
+.object-container {
+	display: grid;
+	gap: 1em;
+}
+
 .form-group input {
 	width: 100%;
 	padding: 10px;
-	font-size: 16px;
+	font-size: 14px;
 	color: #333;
 	border: 1px solid #ddd;
 	border-radius: 5px;
@@ -221,11 +309,11 @@ gap: 1em;
 
 .form-group button {
 	width: 100%;
-	padding: 12px;
-	font-size: 18px;
+	padding: 8px;
+	font-size: 12px;
 	font-weight: bold;
 	color: #fff;
-	background-color: #6c7ae0;
+	background-color: #2b2f3a;
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
@@ -233,13 +321,13 @@ gap: 1em;
 }
 
 .form-group button:hover {
-	background-color: #5a6dd4;
+	background-color: #595959;
 }
 
 .sidenav {
 	/* height: 100vh; */
 	width: 0;
-	background-color: #2b2f3a;
+	background-color: var(--c2);
 	color: #fff;
 	overflow: auto;
 	transition: width 0.5s;
@@ -249,7 +337,7 @@ gap: 1em;
 .sidenav-header {
 	padding: 20px 30px;
 	font-size: 1.5rem;
-	background-color: #1f232b;
+	background-color: var(--c2);
 	border-bottom: 1px solid #444;
 	display: flex;
 	align-items: center;
@@ -257,8 +345,12 @@ gap: 1em;
 }
 
 .sidenav-header h2 {
+	
 	margin: 0;
 	font-weight: normal;
+	background: linear-gradient(to right, var(--c3), var(--c1));
+    background-clip: text;
+    color: transparent;
 }
 
 .closebtn {

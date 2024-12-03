@@ -4,451 +4,27 @@ import JSONDOMViewer from "./json-dom-viewer.js"
 import createTable from "./DataTable.js"
 
 import { createForm } from './Editor.js'
+import { SailhouseFields } from "./Fields.js"
+import { SailhouseEntities } from "./Entities.js"
 
-const SDK_NAME = 'TrelloSDK'
+import { SailhouseTheme } from "./Theme.js"
+
+const SDK_NAME = 'SailhouseSDK'
 
 // TODO: Figure the best way to export this globally
 window.createForm = createForm
 
 window[SDK_NAME].fields = {}
 
-// TODO: Separate editables for both create and save but usually the fields added in POST are the same for PUT for most Swaggers.
-window[SDK_NAME].fields.editables = {
-  'board': {
-    "post": {
-      "closed": { // required but NOT indicated by the SWAGGER
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "desc": {
-        "type": "string",
-        "length": {
-          "min": 0,
-          "max": 16384
-        }
-      },
-      "idBoardSource": {
-        "type": "string",
-        "description": "The id of the board to copy into the new board"
-      },
-      "idOrganization": {
-        "type": "string",
-        "description": "The id or name of the organization to add the board to"
-      },
-      "keepFromSource": {
-        "type": "string",
-        "description": "Components of the source board to copy"
-      },
-      "labelNames": {
-        "blue": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "green": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "orange": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "purple": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "red": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "yellow": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        }
-      },
-      "name": {
-        "type": "string",
-        "length": {
-          "min": 1,
-          "max": 16384
-        }
-      },
-      "powerUps": {
-        "type": "string",
-        "values": ["all", "calendar", "cardAging", "recap", "voting"]
-      },
-      "prefs": {
-        "background": {
-          "type": "string",
-          "description": "A standard background name, or the id of a custom background"
-        },
-        "calendarFeedEnabled": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "cardAging": {
-          "type": "string",
-          "values": ["pirate", "regular"]
-        },
-        "cardCovers": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "comments": {
-          "type": "string",
-          "values": ["disabled", "members", "observers", "org", "public"]
-        },
-        "invitations": {
-          "type": "string",
-          "values": ["admins", "members"]
-        },
-        "permissionLevel": {
-          "type": "string",
-          "values": ["org", "private", "public"]
-        },
-        "selfJoin": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "voting": {
-          "type": "string",
-          "values": ["disabled", "members", "observers", "org", "public"]
-        }
-      },
-      "prefs_background": {
-        "type": "string",
-        "length": {
-          "min": 0,
-          "max": 16384
-        }
-      },
-      "prefs_cardAging": {
-        "type": "string",
-        "values": ["pirate", "regular"]
-      },
-      "prefs_cardCovers": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "prefs_comments": {
-        "type": "string",
-        "values": ["disabled", "members", "observers", "org", "public"]
-      },
-      "prefs_invitations": {
-        "type": "string",
-        "values": ["admins", "members"]
-      },
-      "prefs_permissionLevel": {
-        "type": "string",
-        "values": ["org", "private", "public"]
-      },
-      "prefs_selfJoin": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "prefs_voting": {
-        "type": "string",
-        "values": ["disabled", "members", "observers", "org", "public"]
-      },
-      "subscribed": {
-        "type": "string",
-        "values": ["true", "false"]
-      }
-    },
-    "put": {
-      "closed": { // required but NOT indicated by the SWAGGER
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "desc": {
-        "type": "string",
-        "length": {
-          "min": 0,
-          "max": 16384
-        }
-      },
-      "idBoardSource": {
-        "type": "string",
-        "description": "The id of the board to copy into the new board"
-      },
-      "idOrganization": {
-        "type": "string",
-        "description": "The id or name of the organization to add the board to"
-      },
-      "keepFromSource": {
-        "type": "string",
-        "description": "Components of the source board to copy"
-      },
-      "labelNames": {
-        "blue": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "green": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "orange": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "purple": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "red": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        },
-        "yellow": {
-          "type": "string",
-          "length": {
-            "min": 0,
-            "max": 16384
-          }
-        }
-      },
-      "name": {
-        "type": "string",
-        "length": {
-          "min": 1,
-          "max": 16384
-        }
-      },
-      "powerUps": {
-        "type": "string",
-        "values": ["all", "calendar", "cardAging", "recap", "voting"]
-      },
-      "prefs": {
-        "background": {
-          "type": "string",
-          "description": "A standard background name, or the id of a custom background"
-        },
-        "calendarFeedEnabled": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "cardAging": {
-          "type": "string",
-          "values": ["pirate", "regular"]
-        },
-        "cardCovers": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "comments": {
-          "type": "string",
-          "values": ["disabled", "members", "observers", "org", "public"]
-        },
-        "invitations": {
-          "type": "string",
-          "values": ["admins", "members"]
-        },
-        "permissionLevel": {
-          "type": "string",
-          "values": ["org", "private", "public"]
-        },
-        "selfJoin": {
-          "type": "string",
-          "values": ["true", "false"]
-        },
-        "voting": {
-          "type": "string",
-          "values": ["disabled", "members", "observers", "org", "public"]
-        }
-      },
-      "prefs_background": {
-        "type": "string",
-        "length": {
-          "min": 0,
-          "max": 16384
-        }
-      },
-      "prefs_cardAging": {
-        "type": "string",
-        "values": ["pirate", "regular"]
-      },
-      "prefs_cardCovers": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "prefs_comments": {
-        "type": "string",
-        "values": ["disabled", "members", "observers", "org", "public"]
-      },
-      "prefs_invitations": {
-        "type": "string",
-        "values": ["admins", "members"]
-      },
-      "prefs_permissionLevel": {
-        "type": "string",
-        "values": ["org", "private", "public"]
-      },
-      "prefs_selfJoin": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "prefs_voting": {
-        "type": "string",
-        "values": ["disabled", "members", "observers", "org", "public"]
-      },
-      "subscribed": {
-        "type": "string",
-        "values": ["true", "false"]
-      }
-    },
-  },
+// TODO: Separate editables for both create and save but usually the fields added in POST are the same for PUT for most Swaggers
+window[SDK_NAME].fields.editables = SailhouseFields
 
-  "list": {
-    "post": {
-      "closed": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "idBoard": {
-        "type": "string",
-        "description": "id of the board that the list should be added to"
-      },
-      "idListSource": {
-        "type": "string",
-        "description": "The id of the list to copy into a new list"
-      },
-      "name": {
-        "type": "string",
-        "length": {
-          "min": 1,
-          "max": 16384
-        }
-      },
-      "pos": {
-        "type": "string",
-        "values": ["top", "bottom"],
-        "description": "A position. 'top', 'bottom', or a positive number"
-      },
-      "subscribed": {
-        "type": "string",
-        "values": ["true", "false"]
-      }
-    },
-    "put": {
-      "closed": {
-        "type": "string",
-        "values": ["true", "false"]
-      },
-      "idBoard": {
-        "type": "string",
-        "description": "id of the board that the list should be added to"
-      },
-      "idListSource": {
-        "type": "string",
-        "description": "The id of the list to copy into a new list"
-      },
-      "name": {
-        "type": "string",
-        "length": {
-          "min": 1,
-          "max": 16384
-        }
-      },
-      "pos": {
-        "type": "string",
-        "values": ["top", "bottom"],
-        "description": "A position. 'top', 'bottom', or a positive number"
-      },
-      "subscribed": {
-        "type": "string",
-        "values": ["true", "false"]
-      }
-    }
-  }
 
-}
+let entities = SailhouseEntities
 
-let entities = [
-  {
-    name: 'board',
-    title: 'Board', // just capitalized
-
-    // TODO: Transform from model
-    op: {
-      save: {},
-      create: {},
-      list: {
-        query: {
-          idMember: { 
-            type: String,
-            // HARDCODED - make a query button/form
-            default: 'me'
-          }
-        }
-      },
-      remove: {}
-    },
-
-    // TODO: Transform from model
-    formFields: Object.keys(window[SDK_NAME].fields.editables['board'].post)
-  },
-  {
-    name: 'list',
-    title: 'List',
-
-    // TODO: Transform from model
-    op: {
-      save: {},
-      create: {},
-      list: {
-        query: {
-          idBoard: { 
-            type: String,
-            // HARDCODED - make a query button/form
-            default: '6735f4225f8fbbd10bba2da0'
-          }
-        }
-      },
-      // If not found here, it is considered "UNSUPPORTED"
-      // remove: {}
-    },
-
-    formFields: Object.keys(window[SDK_NAME].fields.editables['list'].post)
-  }
-]
-
-console.log(SDK_NAME, window[SDK_NAME])
 window[SDK_NAME].ui.current_entity = entities[0] // DEFAULT
 
-
+setThemeVariables(SailhouseTheme);
 
 function injectDataEditor(data, op, handler) {
   let dataEditorDivContainer = document.querySelector('#dataEditor')
@@ -460,11 +36,17 @@ function injectDataEditor(data, op, handler) {
 
   dataEditorDivContainer.innerHTML = ''
 
+  console.log('Editables Fields Create Form: ', window[SDK_NAME].ui.current_entity.name, op)
+  
+  const editables = window[SDK_NAME].fields.editables
+  
+  
   let form = createForm({
     fields: {
       'id': { disabled: true },
       'lastModified': { disabled: true },
-      editables: window[SDK_NAME].fields.editables[
+      editables: op == 'Create' ? editables[
+        window[SDK_NAME].ui.current_entity.name].post : editables[
         window[SDK_NAME].ui.current_entity.name].put
     },
     op, // TODO: ops: ['Save', 'Delete']
@@ -499,6 +81,13 @@ function injectDataEditor(data, op, handler) {
   })
   dataEditorDivContainer.appendChild(div)
 
+}
+
+function setThemeVariables(themeVars) {
+  const root = document.documentElement; // Select the root element (:root)
+  Object.entries(themeVars).forEach(([key, value]) => {
+    root.style.setProperty(key, value);
+  });
 }
 
 function injectForm(form) {
@@ -583,12 +172,29 @@ async function loadComponents(current_entity) {
               }, {})
 
               console.log('new entity: ', new_entity)
+              console.log('current_entity: ', window[SDK_NAME].ui.current_entity)
 
               // TODO: Exclude delete button/op, Only create button
               injectDataEditor(new_entity, 'create', async (op, item) => {
+                console.log('ddd: ', op, item) // { ...item }
 
                 if(op == 'create') {
-                  let post_item = await fetch(`/api/${SDK_NAME}/${window[SDK_NAME].ui.current_entity.name}/create`, {
+                  const query_entries = Object.entries(current_entity.op.create.query || {})
+                  // TODO: Export this function as a utility
+                  let query = query_entries.reduce((acc, entry, i) => {
+                    acc += entry[0] + '=' + entry[1].default
+                    if(i < query_entries.length-1) acc += '&'
+
+                    return acc
+                  }, '')
+  
+                  // console.log('query_entries: ', query_entries)
+
+                  query = query == '' ? '' : '?' + query
+                  
+                  console.log('create query: ', query)
+                  
+                  let post_item = await fetch(`/api/${SDK_NAME}/${window[SDK_NAME].ui.current_entity.name}/create${query}`, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json'
@@ -624,6 +230,8 @@ async function loadComponents(current_entity) {
 
     return acc
   }, '')
+  
+  // console.log('query_entries: ', query_entries)
 
   query = query == '' ? '' : '?' + query
 
@@ -685,7 +293,29 @@ async function loadComponents(current_entity) {
       
       }
 
+      let load_entity
 
+      if(window[SDK_NAME].ui.datatable.load == 'data') {
+         // TODO: Fix Object Object bug as now the item nested objects are strings from the data-set so the content aren't lost. Should we JSON.stringify in both cases: stringify everything and pass it around, in other words?
+        let entity = { ...item }
+        /*
+        for(let key in entity) {
+          if(key.endsWith('_json')) {
+            entity[key] = JSON.parse(entity[key])
+          }
+        }
+        */
+        load_entity = entity
+      } else if(window[SDK_NAME].ui.datatable.load == 'network') {
+        let out = await fetch(`/api/${SDK_NAME}/${window[SDK_NAME].ui.current_entity.name}/load/${item.id}`, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'GET',
+        })
+        load_entity = await out.json()
+
+      }
 
       console.log('load_entity: ', load_entity)
 
